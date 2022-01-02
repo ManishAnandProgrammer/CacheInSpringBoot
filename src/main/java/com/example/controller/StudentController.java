@@ -40,4 +40,15 @@ public class StudentController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @PutMapping("/students")
+    public ResponseEntity<Student> update(@RequestBody Student student) {
+        try {
+            Student updatedStudent = studentService.update(student);
+            return ResponseEntity.ok(updatedStudent);
+        } catch (Exception exception) {
+            LOGGER.error("Exception in updating student ", exception);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.example.domain.Student;
 import com.example.repository.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,7 @@ public class StudentService {
 
     public Student save(Student student) {
         LOGGER.info("Going to Save Student with details {}", student);
-        Student savedStudent = studentRepository.save(student);
-        return student;
+        return studentRepository.save(student);
     }
 
     @Cacheable(value = "student", key = "#id")
@@ -28,5 +28,11 @@ public class StudentService {
         return studentRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("No Record Found From Given Id " + id)
         );
+    }
+
+    @CachePut(value = "student", key = "#student.id")
+    public Student update(Student student) {
+        LOGGER.info("Going to update Student {}", student);
+        return studentRepository.save(student);
     }
 }
