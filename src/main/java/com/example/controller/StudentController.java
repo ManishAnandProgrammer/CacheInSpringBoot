@@ -4,6 +4,7 @@ import com.example.domain.Student;
 import com.example.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +62,39 @@ public class StudentController {
         } catch (Exception exception) {
             LOGGER.error("Exception in Getting Students By Name:: {}", name, exception);
             return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/students/middle/{name}")
+    public ResponseEntity<List<Student>> getByMiddleName(@PathVariable final String name) {
+        try {
+            List<Student> student = studentService.findByMiddleName(name);
+            return ResponseEntity.ok(student);
+        } catch (Exception exception) {
+            LOGGER.error("Exception in Getting Students By Name:: {}", name, exception);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/students/last/{name}")
+    public ResponseEntity<List<Student>> getByLastName(@PathVariable final String name) {
+        try {
+            List<Student> student = studentService.findByLastName(name);
+            return ResponseEntity.ok(student);
+        } catch (Exception exception) {
+            LOGGER.error("Exception in Getting Students By Name:: {}", name, exception);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/students/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable final Long id) {
+        try {
+            studentService.delete(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception exception) {
+            LOGGER.error("Exception in Deleting Student with Id {}", id, exception);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
 }

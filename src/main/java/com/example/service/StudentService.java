@@ -46,4 +46,21 @@ public class StudentService {
         LOGGER.info("Going to fetch student with firstName {}", firstName);
         return studentRepository.findByFirstNameIgnoreCase(firstName);
     }
+
+    @Cacheable(value = "studentsWithMiddleName", key = "#middleName")
+    public List<Student> findByMiddleName(final String middleName) {
+        LOGGER.info("Going to fetch student with middleName {}", middleName);
+        return studentRepository.findByMiddleNameIgnoreCase(middleName);
+    }
+
+    @Cacheable(value = "studentsWithLastName", key = "#lastName")
+    public List<Student> findByLastName(final String lastName) {
+        LOGGER.info("Going to fetch student with lastName {}", lastName);
+        return studentRepository.findByLastNameIgnoreCase(lastName);
+    }
+
+    @CacheEvict(value = "student", key = "#id")
+    public void delete(final Long id) {
+        studentRepository.deleteById(id);
+    }
 }
