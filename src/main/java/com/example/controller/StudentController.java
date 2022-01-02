@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class StudentController {
@@ -30,7 +31,7 @@ public class StudentController {
         }
     }
 
-    @GetMapping("/students/{id}")
+    @GetMapping("/students/id/{id}")
     public ResponseEntity<Student> getById(@PathVariable final Long id) {
         try {
             Student student = studentService.findById(id);
@@ -48,6 +49,17 @@ public class StudentController {
             return ResponseEntity.ok(updatedStudent);
         } catch (Exception exception) {
             LOGGER.error("Exception in updating student ", exception);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/students/first/{name}")
+    public ResponseEntity<List<Student>> getByFirstName(@PathVariable final String name) {
+        try {
+            List<Student> student = studentService.findByFirstName(name);
+            return ResponseEntity.ok(student);
+        } catch (Exception exception) {
+            LOGGER.error("Exception in Getting Students By Name:: {}", name, exception);
             return ResponseEntity.internalServerError().build();
         }
     }

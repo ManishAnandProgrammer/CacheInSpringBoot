@@ -4,9 +4,12 @@ import com.example.domain.Student;
 import com.example.repository.StudentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -17,6 +20,7 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
+    @CacheEvict(value = "studentsWithFirstName", allEntries = true)
     public Student save(Student student) {
         LOGGER.info("Going to Save Student with details {}", student);
         return studentRepository.save(student);
@@ -31,8 +35,15 @@ public class StudentService {
     }
 
     @CachePut(value = "student", key = "#student.id")
+    @CacheEvict(value = "studentsWithFirstName", allEntries = true)
     public Student update(Student student) {
         LOGGER.info("Going to update Student {}", student);
         return studentRepository.save(student);
+    }
+
+    @Cacheable(value = "studentsWithFirstName", key = "#firstName")
+    public List<Student> findByFirstName(final String firstName) {
+        LOGGER.info("Going to fetch student with firstName {}", firstName);
+        return studentRepository.findByFirstNameIgnoreCase(firstName);
     }
 }
